@@ -1,0 +1,20 @@
+{
+  "name": "truth-sourcer",
+  "version": "0.0.0",
+  "description": "Custom element feature that manages source of truth attributes",
+  "homepage": "https://github.com/bahrus/truth-sourcer#readme",
+  "bugs": {
+    "url": "https://github.com/bahrus/truth-sourcer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahrus/truth-sourcer.git"
+  },
+  "license": "MIT",
+  "author": "Bruce B. Anderson <anderson.bruce.b@gmail.com>",
+  "type": "module",
+  "main": "AttrMgr.js",
+  "scripts": {
+    "test": "playwright test"
+  }
+}
