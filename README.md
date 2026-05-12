@@ -11,7 +11,7 @@ To use this feature, say you are defining your custom element:
 
 ```JavaScript
 import {TruthSourcer} from 'truth-sourcer/TruthSourcer.js';
-import 'assign-gingerly/object-extension.js';
+import 'assign-gingerly/assignFeatures.js';
 
 class MyElement extends HTMLElement {
     #internals;
