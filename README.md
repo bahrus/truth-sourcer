@@ -1,6 +1,6 @@
 # truth-sourcer
 
-Custom element feature that manages source of truth attributes
+Custom element feature that manages source of truth attributes.
 
 With the advant of custom state that can be set via internals, the need to reflect properties to attributes has greatly diminished.  In the view of this package, ideally attributes should be used only for initial configuration sent via server-side rendering.
 
