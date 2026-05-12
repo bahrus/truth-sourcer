@@ -49,7 +49,7 @@ class MyElement extends HTMLElement {
     }
 
     attributeChangedCallback(name, oldValue, newValue){
-        this.truthSource.attributeChangedCallback(name, oldValue, newValue);
+        this.truthSourcer.attributeChangedCallback(name, oldValue, newValue);
     }
 }
 
