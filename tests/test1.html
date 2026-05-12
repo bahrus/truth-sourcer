@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - TruthSourcer</title>
+    <!-- #include virtual="/imports.html" -->
+    <script type=module>
+        import 'assign-gingerly/assignFeatures.js';
+        import {TruthSourcer} from 'truth-sourcer/TruthSourcer.js';
+
+        class TestElement extends HTMLElement {
+            /** @type {EventTarget} */
+            propagator = new EventTarget();
+
+            static supportedFeatures = {
+                truthSourcer: {
+                    fallbackSpawn: TruthSourcer,
+                }
+            };
+
+            /** @type {string} */
+            #name = '';
+
+            get name() {
+                return this.#name;
+            }
+
+            set name(nv) {
+                this.#name = nv;
+                this.propagator.dispatchEvent(new Event('name'));
+            }
+
+            /** @type {number} */
+            #count = 0;
+
+            get count() {
+                return this.#count;
+            }
+
+            set count(nv) {
+                this.#count = nv;
+                this.propagator.dispatchEvent(new Event('count'));
+            }
+
+            /** @type {boolean} */
+            #disabled = false;
+
+            get disabled() {
+                return this.#disabled;
+            }
+
+            set disabled(nv) {
+                this.#disabled = nv;
+                this.propagator.dispatchEvent(new Event('disabled'));
+            }
+
+            static observedAttributes = ['name', 'count', 'disabled'];
+
+            constructor() {
+                super();
+                this.truthSourcer.hostPropagator = this.propagator;
+            }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                this.truthSourcer.attributeChangedCallback(name, oldValue, newValue);
+            }
+        }
+
+        customElements.assignFeatures(TestElement, {
+            truthSourcer: { spawn: TruthSourcer }
+        });
+
+        customElements.define('test-element', TestElement);
+    </script>
+</head>
+<body>
+    <h1>TruthSourcer Test</h1>
+
+    <h2>Test 1: Initial attribute sets property</h2>
+    <test-element id="t1" name="Alice"></test-element>
+
+    <h2>Test 2: Property change reflects to attribute</h2>
+    <test-element id="t2"></test-element>
+
+    <h2>Test 3: Boolean attribute</h2>
+    <test-element id="t3" disabled></test-element>
+
+    <h2>Test 4: Number attribute</h2>
+    <test-element id="t4" count="42"></test-element>
+
+    <script type=module>
+        // Give elements time to upgrade
+        await customElements.whenDefined('test-element');
+
+        const t1 = document.getElementById('t1');
+        const t2 = document.getElementById('t2');
+        const t3 = document.getElementById('t3');
+        const t4 = document.getElementById('t4');
+
+        // Test 1: attribute -> property
+        console.assert(t1.name === 'Alice', `Test 1 failed: expected 'Alice', got '${t1.name}'`);
+        console.log('Test 1 (attr -> prop):', t1.name);
+
+        // Test 2: property -> attribute
+        t2.name = 'Bob';
+        console.assert(t2.getAttribute('name') === 'Bob', `Test 2 failed: expected 'Bob', got '${t2.getAttribute('name')}'`);
+        console.log('Test 2 (prop -> attr):', t2.getAttribute('name'));
+
+        // Test 3: boolean attribute
+        console.assert(t3.disabled === true, `Test 3 failed: expected true, got ${t3.disabled}`);
+        console.log('Test 3 (boolean attr):', t3.disabled);
+
+        // Test 3b: remove boolean attribute via property
+        t3.disabled = false;
+        console.assert(!t3.hasAttribute('disabled'), `Test 3b failed: disabled attribute should be removed`);
+        console.log('Test 3b (boolean prop->attr removal):', !t3.hasAttribute('disabled'));
+
+        // Test 4: number attribute
+        console.assert(t4.count === 42, `Test 4 failed: expected 42, got ${t4.count}`);
+        console.log('Test 4 (number attr):', t4.count);
+
+        // Test 4b: number property -> attribute
+        t4.count = 99;
+        console.assert(t4.getAttribute('count') === '99', `Test 4b failed: expected '99', got '${t4.getAttribute('count')}'`);
+        console.log('Test 4b (number prop->attr):', t4.getAttribute('count'));
+
+        console.log('All tests passed!');
+    </script>
+</body>
+</html>
