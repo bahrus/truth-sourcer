@@ -2,7 +2,7 @@
 
 Custom element feature that manages source of truth attributes.
 
-With the advant of custom state that can be set via internals, the need to reflect properties to attributes has greatly diminished.  In the view of this package, ideally attributes should be used only for initial configuration sent via server-side rendering.
+With the advent of custom state that can be set via internals, the need to reflect properties to attributes has greatly diminished.  In the view of this package, ideally attributes should be used only for initial configuration sent via server-side rendering.
 
 However, there are some limited use cases where "source of truth" attributes are still needed, so this package contains the world's first "custom element feature" to help manage such attributes, where the value of the attribute exactly mirrors a property with the same name and vice versa.
 
