@@ -14,7 +14,6 @@ import {TruthSourcer} from 'truth-sourcer/TruthSourcer.js';
 import 'assign-gingerly/object-extension.js';
 
 class MyElement extends HTMLElement {
-    #internals;
     /**
      * @type {EventTarget}
      **/
