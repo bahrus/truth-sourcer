@@ -72,3 +72,36 @@ Even though attributes are case insensitive, to inform truthSourcer the name of 
 Recommendation is to limit such cases to attributes supported natively by the platform (such as "name").
 
 The property values have to be initialized to non-null values, so that truthSourcer can infer the type that the property should take (string, boolean, number).  This pretty much mirrors how the platform handles source of truth attributes.
+
+## Viewing Demos Locally
+
+1. Install git
+2. Fork/clone this repo
+3. Install node.js
+4. Open command window to folder where you cloned this repo
+5. > git submodule add https://github.com/bahrus/types.git types
+6. > git submodule update --init --recursive
+7. > npm install
+8. > npm run serve
+9. Open http://localhost:8000/ in a modern browser
+
+## Running Tests
+
+```
+> npm run test
+```
+
+## Using from ESM Module:
+
+```JavaScript
+import 'truth-sourcer/TruthSouurcer.js';
+```
+
+## Using from CDN:
+
+```html
+<script type=module crossorigin=anonymous>
+    import 'https://esm.sh/truth-sourcer';
+</script>
+```
+
