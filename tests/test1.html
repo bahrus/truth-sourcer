@@ -16,6 +16,11 @@
             static supportedFeatures = {
                 truthSourcer: {
                     fallbackSpawn: TruthSourcer,
+                    getSharedContext(instance) {
+                        return {
+                            hostPropagator: instance.propagator
+                        };
+                    }
                 }
             };
 
@@ -56,19 +61,14 @@
             }
 
             static observedAttributes = ['name', 'count', 'disabled'];
-
-            constructor() {
-                super();
-                this.truthSourcer.hostPropagator = this.propagator;
-            }
-
-            attributeChangedCallback(name, oldValue, newValue) {
-                this.truthSourcer.attributeChangedCallback(name, oldValue, newValue);
-            }
         }
 
+        // callbackForwarding handles attributeChangedCallback automatically
         customElements.assignFeatures(TestElement, {
-            truthSourcer: { spawn: TruthSourcer }
+            truthSourcer: {
+                spawn: TruthSourcer,
+                callbackForwarding: ['attributeChangedCallback']
+            }
         });
 
         customElements.define('test-element', TestElement);

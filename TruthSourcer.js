@@ -34,6 +34,12 @@ class TruthSourcer {
         const ctor = /** @type {any} */ (hostElement.constructor);
         this.#observedAttributes = ctor.observedAttributes || [];
 
+        // Get hostPropagator from shared context (provided by getSharedContext)
+        const propagator = ctx?.shared?.hostPropagator;
+        if (propagator) {
+            this.hostPropagator = propagator;
+        }
+
         if (initVals) {
             if (initVals.hostPropagator) {
                 this.hostPropagator = initVals.hostPropagator;
@@ -75,7 +81,7 @@ class TruthSourcer {
     }
 
     /**
-     * Called by the host element's attributeChangedCallback.
+     * Called via callbackForwarding from the host element's attributeChangedCallback.
      * Syncs the attribute value into the corresponding property.
      * 
      * @param {string} name - The attribute name
