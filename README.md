@@ -22,60 +22,7 @@ class MyElement extends HTMLElement {
     static supportedFeatures = {
         truthSourcer: {
             fallbackSpawn: TruthSourcer,
-            getSharedContext(instance) {
-                return {
-                    hostPropagator: instance.propagator
-                };
-            }
-        }
-    };
-
-    /**
-     * @type {string}
-     **/
-    #name = '';
-
-    get name(){
-        return this.#name;
-    }
-
-    set name(nv){
-        this.#name = nv;
-        this.propagator.dispatchEvent(new Event('name'));
-    }
-
-    static observedAttributes = ['name'];
-
-    attributeChangedCallback(name, oldValue, newValue){
-        this.truthSourcer.attributeChangedCallback(name, oldValue, newValue);
-    }
-}
-
-customElements.assignFeatures(MyElement, {
-    truthSourcer: {
-        spawn: TruthSourcer,
-        callbackForwarding: ['attributeChangedCallback']
-    }
-});
-
-customElements.define('my-element', MyElement);
-```
-
-Note: `callbackForwarding: ['attributeChangedCallback']` means the host's `attributeChangedCallback` is automatically forwarded to the feature. The manual delegation shown above (`this.truthSourcer.attributeChangedCallback(...)`) is only needed if you are NOT using `callbackForwarding`. When using `callbackForwarding`, the consumer can omit `attributeChangedCallback` entirely:
-
-```JavaScript
-import {TruthSourcer} from 'truth-sourcer/TruthSourcer.js';
-import 'assign-gingerly/assignFeatures.js';
-
-class MyElement extends HTMLElement {
-    /**
-     * @type {EventTarget}
-     **/
-    propagator = new EventTarget();
-
-    static supportedFeatures = {
-        truthSourcer: {
-            fallbackSpawn: TruthSourcer,
+            callbackForwarding: ['attributeChangedCallback'],
             getSharedContext(instance) {
                 return {
                     hostPropagator: instance.propagator
@@ -102,10 +49,7 @@ class MyElement extends HTMLElement {
 }
 
 customElements.assignFeatures(MyElement, {
-    truthSourcer: {
-        spawn: TruthSourcer,
-        callbackForwarding: ['attributeChangedCallback']
-    }
+    truthSourcer: { spawn: TruthSourcer }
 });
 
 customElements.define('my-element', MyElement);
@@ -114,10 +58,12 @@ customElements.define('my-element', MyElement);
 ## How it works
 
 1. **`getSharedContext`** provides the host's `propagator` (EventTarget) to TruthSourcer at spawn time — no manual wiring needed in the constructor.
-2. **`callbackForwarding: ['attributeChangedCallback']`** automatically forwards the host's `attributeChangedCallback` to TruthSourcer, so attribute changes sync to properties without any boilerplate.
+2. **`callbackForwarding: ['attributeChangedCallback']`** in `supportedFeatures` declares that this feature needs `attributeChangedCallback` forwarded. The framework patches the host's callback automatically — no manual delegation needed.
 3. **Property → Attribute**: When the host sets a property and dispatches an event on the propagator, TruthSourcer catches it and calls `setAttribute` (or `removeAttribute` for booleans/nulls).
 4. **Attribute → Property**: When an attribute changes, TruthSourcer coerces the string value to the correct type (inferred from the property's current value) and sets it on the host.
 5. A `#syncing` flag prevents infinite loops between the two directions.
+
+Since `callbackForwarding` is specified in `supportedFeatures`, the element author doesn't need to write `attributeChangedCallback` at all — the forwarding is guaranteed regardless of what the injector provides (a union is taken between `supportedFeatures` and the injection config).
 
 ## Restrictions
 

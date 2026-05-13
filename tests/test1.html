@@ -16,6 +16,7 @@
             static supportedFeatures = {
                 truthSourcer: {
                     fallbackSpawn: TruthSourcer,
+                    callbackForwarding: ['attributeChangedCallback'],
                     getSharedContext(instance) {
                         return {
                             hostPropagator: instance.propagator
@@ -63,12 +64,8 @@
             static observedAttributes = ['name', 'count', 'disabled'];
         }
 
-        // callbackForwarding handles attributeChangedCallback automatically
         customElements.assignFeatures(TestElement, {
-            truthSourcer: {
-                spawn: TruthSourcer,
-                callbackForwarding: ['attributeChangedCallback']
-            }
+            truthSourcer: { spawn: TruthSourcer }
         });
 
         customElements.define('test-element', TestElement);
