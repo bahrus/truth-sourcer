@@ -22,7 +22,7 @@ class MyElement extends HTMLElement {
     static supportedFeatures = {
         truthSourcer: {
             fallbackSpawn: TruthSourcer,
-            callbackForwarding: ['attributeChangedCallback'],
+            callbackForwarding: ['connectedCallback', 'attributeChangedCallback'],
             getSharedContext(instance) {
                 return {
                     hostPropagator: instance.propagator
