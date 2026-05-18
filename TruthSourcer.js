@@ -119,9 +119,15 @@ class TruthSourcer {
 
         switch(typeof value){
             case 'boolean':
-            case 'string':
                 if (value) {
                     host.setAttribute(attrName, '');
+                } else {
+                    host.removeAttribute(attrName);
+                }
+                break;
+            case 'string':
+                if (value) {
+                    host.setAttribute(attrName, value);
                 } else {
                     host.removeAttribute(attrName);
                 }
