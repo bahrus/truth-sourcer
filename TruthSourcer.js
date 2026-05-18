@@ -117,16 +117,21 @@ class TruthSourcer {
         const value = /** @type {any} */ (host)[attrName];
         this.#syncing = true;
 
-        if (typeof value === 'boolean') {
-            if (value) {
-                host.setAttribute(attrName, '');
-            } else {
-                host.removeAttribute(attrName);
-            }
-        } else if (value == null) {
-            host.removeAttribute(attrName);
-        } else {
-            host.setAttribute(attrName, String(value));
+        switch(typeof value){
+            case 'boolean':
+            case 'string':
+                if (value) {
+                    host.setAttribute(attrName, '');
+                } else {
+                    host.removeAttribute(attrName);
+                }
+                break;
+            default:
+                if (value == null) {
+                    host.removeAttribute(attrName);
+                } else {
+                    host.setAttribute(attrName, String(value));
+                }
         }
 
         this.#syncing = false;
