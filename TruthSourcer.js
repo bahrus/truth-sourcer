@@ -1,5 +1,6 @@
 // @ts-check
 /** @import {TruthSourcerProps, AllProps, FeatureSpawnContext} from './types/truth-sourcer/types' */
+/** @import {FeatureConfig} from './types/assign-gingerly/types' */
 
 /**
  * Custom element feature that manages "source of truth" attributes.
@@ -9,6 +10,24 @@
  * @implements {TruthSourcerProps}
  */
 class TruthSourcer {
+
+    /**
+     * Called once by assignFeatures after registration.
+     * Sets `static formAssociated = true` on the host constructor so the
+     * consumer doesn't need to declare it manually.
+     * @param {typeof HTMLElement} ctr - The custom element constructor
+     * @param {FeatureConfig} _featureConfig - The feature config (unused)
+     * @param {string} key
+     */
+    static async onAssigned(ctr, _featureConfig, key) {
+        const observedAttributes = _featureConfig?.customData?.observedAttributes;
+        // @ts-ignore
+        if(!ctr.observedAttributes && Array.isArray(observedAttributes)){
+            // @ts-ignore 
+            ctr.observedAttributes = observedAttributes;
+        }
+    }
+
     /** @type {WeakRef<HTMLElement> | null} */
     #hostRef = null;
 
